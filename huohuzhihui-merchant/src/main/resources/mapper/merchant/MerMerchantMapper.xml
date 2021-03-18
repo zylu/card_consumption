@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huohuzhihui.merchant.mapper.MerMerchantMapper">
+    
+    <resultMap type="MerMerchant" id="MerMerchantResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="contactor"    column="contactor"    />
+        <result property="mobile"    column="mobile"    />
+        <result property="remarks"    column="remarks"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectMerMerchantVo">
+        select id, name, contactor, mobile, remarks, create_by, create_time, update_by, update_time, del_flag from mer_merchant
+    </sql>
+
+    <select id="selectMerMerchantList" parameterType="MerMerchant" resultMap="MerMerchantResult">
+        <include refid="selectMerMerchantVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="mobile != null  and mobile != ''"> and mobile = #{mobile}</if>
+        </where>
+    </select>
+    
+    <select id="selectMerMerchantById" parameterType="Long" resultMap="MerMerchantResult">
+        <include refid="selectMerMerchantVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertMerMerchant" parameterType="MerMerchant" useGeneratedKeys="true" keyProperty="id">
+        insert into mer_merchant
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="contactor != null">contactor,</if>
+            <if test="mobile != null">mobile,</if>
+            <if test="remarks != null">remarks,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="contactor != null">#{contactor},</if>
+            <if test="mobile != null">#{mobile},</if>
+            <if test="remarks != null">#{remarks},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMerMerchant" parameterType="MerMerchant">
+        update mer_merchant
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="contactor != null">contactor = #{contactor},</if>
+            <if test="mobile != null">mobile = #{mobile},</if>
+            <if test="remarks != null">remarks = #{remarks},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMerMerchantById" parameterType="Long">
+        delete from mer_merchant where id = #{id}
+    </delete>
+
+    <delete id="deleteMerMerchantByIds" parameterType="String">
+        delete from mer_merchant where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

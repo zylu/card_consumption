@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huohuzhihui.account.mapper.AccRechargePayMapper">
+    
+    <resultMap type="AccRechargePay" id="AccRechargePayResult">
+        <result property="id"    column="id"    />
+        <result property="rechargeId"    column="recharge_id"    />
+        <result property="outTradeNo"    column="out_trade_no"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="requestData"    column="request_data"    />
+        <result property="responseData"    column="response_data"    />
+    </resultMap>
+
+    <sql id="selectAccRechargePayVo">
+        select id, recharge_id, out_trade_no, create_time, update_time, request_data, response_data from acc_recharge_pay
+    </sql>
+
+    <select id="selectAccRechargePayList" parameterType="AccRechargePay" resultMap="AccRechargePayResult">
+        <include refid="selectAccRechargePayVo"/>
+        <where>  
+            <if test="rechargeId != null "> and recharge_id = #{rechargeId}</if>
+            <if test="outTradeNo != null  and outTradeNo != ''"> and out_trade_no = #{outTradeNo}</if>
+            <if test="requestData != null  and requestData != ''"> and request_data = #{requestData}</if>
+            <if test="responseData != null  and responseData != ''"> and response_data = #{responseData}</if>
+        </where>
+    </select>
+    
+    <select id="selectAccRechargePayById" parameterType="Long" resultMap="AccRechargePayResult">
+        <include refid="selectAccRechargePayVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertAccRechargePay" parameterType="AccRechargePay" useGeneratedKeys="true" keyProperty="id">
+        insert into acc_recharge_pay
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="rechargeId != null">recharge_id,</if>
+            <if test="outTradeNo != null">out_trade_no,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="requestData != null">request_data,</if>
+            <if test="responseData != null">response_data,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="rechargeId != null">#{rechargeId},</if>
+            <if test="outTradeNo != null">#{outTradeNo},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="requestData != null">#{requestData},</if>
+            <if test="responseData != null">#{responseData},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAccRechargePay" parameterType="AccRechargePay">
+        update acc_recharge_pay
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="rechargeId != null">recharge_id = #{rechargeId},</if>
+            <if test="outTradeNo != null">out_trade_no = #{outTradeNo},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="requestData != null">request_data = #{requestData},</if>
+            <if test="responseData != null">response_data = #{responseData},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAccRechargePayById" parameterType="Long">
+        delete from acc_recharge_pay where id = #{id}
+    </delete>
+
+    <delete id="deleteAccRechargePayByIds" parameterType="String">
+        delete from acc_recharge_pay where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

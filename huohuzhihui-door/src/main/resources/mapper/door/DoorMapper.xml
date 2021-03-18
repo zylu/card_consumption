@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huohuzhihui.door.mapper.DoorMapper">
+    
+    <resultMap type="Door" id="DoorResult">
+        <result property="id"    column="ID"    />
+        <result property="name"    column="name"    />
+        <result property="remark"    column="remark"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="accessControlLockId"    column="access_control_lock_id"    />
+        <result property="doorGroupId"    column="door_group_id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="doorAreaId"    column="door_area_id"    />
+    </resultMap>
+
+    <sql id="selectDoorVo">
+        select ID, name, remark, update_time, create_time, del_flag, access_control_lock_id, door_group_id, create_by, update_by, door_area_id from t_door
+    </sql>
+
+    <select id="selectDoorList" parameterType="Door" resultMap="DoorResult">
+        <include refid="selectDoorVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="accessControlLockId != null "> and access_control_lock_id = #{accessControlLockId}</if>
+            <if test="doorGroupId != null "> and door_group_id = #{doorGroupId}</if>
+            <if test="doorAreaId != null  and doorAreaId != ''"> and door_area_id = #{doorAreaId}</if>
+        </where>
+    </select>
+    
+    <select id="selectDoorById" parameterType="String" resultMap="DoorResult">
+        <include refid="selectDoorVo"/>
+        where ID = #{id}
+    </select>
+        
+    <insert id="insertDoor" parameterType="Door">
+        insert into t_door
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">ID,</if>
+            <if test="name != null">name,</if>
+            <if test="remark != null">remark,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="accessControlLockId != null">access_control_lock_id,</if>
+            <if test="doorGroupId != null">door_group_id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="doorAreaId != null">door_area_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="name != null">#{name},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="accessControlLockId != null">#{accessControlLockId},</if>
+            <if test="doorGroupId != null">#{doorGroupId},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="doorAreaId != null">#{doorAreaId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDoor" parameterType="Door">
+        update t_door
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="accessControlLockId != null">access_control_lock_id = #{accessControlLockId},</if>
+            <if test="doorGroupId != null">door_group_id = #{doorGroupId},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="doorAreaId != null">door_area_id = #{doorAreaId},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+    <delete id="deleteDoorById" parameterType="String">
+        delete from t_door where ID = #{id}
+    </delete>
+
+    <delete id="deleteDoorByIds" parameterType="String">
+        delete from t_door where ID in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>huohuzhihui</artifactId>
+        <groupId>com.huohuzhihui</groupId>
+        <version>3.2.0</version>
+    </parent>
+    <packaging>jar</packaging>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>huohuzhihui-account</artifactId>
+
+    <description>
+        账户模块
+    </description>
+
+    <dependencies>
+
+        <!-- 通用工具-->
+        <dependency>
+            <groupId>com.huohuzhihui</groupId>
+            <artifactId>huohuzhihui-common</artifactId>
+            <version>3.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.huohuzhihui</groupId>
+            <artifactId>huohuzhihui-trade</artifactId>
+        </dependency>
+
+    </dependencies>
+
+</project>

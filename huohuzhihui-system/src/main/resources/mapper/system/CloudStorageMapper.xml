@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huohuzhihui.system.mapper.CloudStorageMapper">
+    
+    <resultMap type="CloudStorage" id="CloudStorageResult">
+        <result property="id"    column="id"    />
+        <result property="storageName"    column="storage_name"    />
+        <result property="storageUrl"    column="storage_url"    />
+        <result property="storageKey"    column="storage_key"    />
+        <result property="storageSecret"    column="storage_secret"    />
+        <result property="storageBucket"    column="storage_bucket"    />
+        <result property="isDefault"    column="is_default"    />
+    </resultMap>
+
+    <sql id="selectCloudStorageVo">
+        select id, storage_name, storage_url, storage_key, storage_secret, storage_bucket, is_default from t_cloud_storage
+    </sql>
+
+    <select id="selectCloudStorageList" parameterType="CloudStorage" resultMap="CloudStorageResult">
+        <include refid="selectCloudStorageVo"/>
+        <where>  
+            <if test="storageName != null  and storageName != ''"> and storage_name like concat('%', #{storageName}, '%')</if>
+            <if test="storageUrl != null  and storageUrl != ''"> and storage_url = #{storageUrl}</if>
+            <if test="storageKey != null  and storageKey != ''"> and storage_key = #{storageKey}</if>
+            <if test="storageSecret != null  and storageSecret != ''"> and storage_secret = #{storageSecret}</if>
+            <if test="storageBucket != null  and storageBucket != ''"> and storage_bucket = #{storageBucket}</if>
+            <if test="isDefault != null "> and is_default = #{isDefault}</if>
+        </where>
+    </select>
+    
+    <select id="selectCloudStorageById" parameterType="Long" resultMap="CloudStorageResult">
+        <include refid="selectCloudStorageVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertCloudStorage" parameterType="CloudStorage" useGeneratedKeys="true" keyProperty="id">
+        insert into t_cloud_storage
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="storageName != null">storage_name,</if>
+            <if test="storageUrl != null">storage_url,</if>
+            <if test="storageKey != null">storage_key,</if>
+            <if test="storageSecret != null">storage_secret,</if>
+            <if test="storageBucket != null">storage_bucket,</if>
+            <if test="isDefault != null">is_default,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="storageName != null">#{storageName},</if>
+            <if test="storageUrl != null">#{storageUrl},</if>
+            <if test="storageKey != null">#{storageKey},</if>
+            <if test="storageSecret != null">#{storageSecret},</if>
+            <if test="storageBucket != null">#{storageBucket},</if>
+            <if test="isDefault != null">#{isDefault},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCloudStorage" parameterType="CloudStorage">
+        update t_cloud_storage
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="storageName != null">storage_name = #{storageName},</if>
+            <if test="storageUrl != null">storage_url = #{storageUrl},</if>
+            <if test="storageKey != null">storage_key = #{storageKey},</if>
+            <if test="storageSecret != null">storage_secret = #{storageSecret},</if>
+            <if test="storageBucket != null">storage_bucket = #{storageBucket},</if>
+            <if test="isDefault != null">is_default = #{isDefault},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCloudStorageById" parameterType="Long">
+        delete from t_cloud_storage where id = #{id}
+    </delete>
+
+    <delete id="deleteCloudStorageByIds" parameterType="String">
+        delete from t_cloud_storage where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

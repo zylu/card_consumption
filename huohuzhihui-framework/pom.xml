@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>huohuzhihui</artifactId>
+        <groupId>com.huohuzhihui</groupId>
+        <version>3.2.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>huohuzhihui-framework</artifactId>
+
+    <description>
+        framework框架核心
+    </description>
+
+    <dependencies>
+
+        <!-- SpringBoot Web容器 -->
+         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- SpringBoot 拦截器 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+
+        <!-- 阿里数据库连接池 -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+        </dependency>
+
+        <!-- 验证码 -->
+        <dependency>
+            <groupId>com.github.penggle</groupId>
+            <artifactId>kaptcha</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>javax.servlet-api</artifactId>
+                    <groupId>javax.servlet</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- 获取系统信息 -->
+        <dependency>
+            <groupId>com.github.oshi</groupId>
+            <artifactId>oshi-core</artifactId>
+        </dependency>
+
+        <!-- 系统模块-->
+        <dependency>
+            <groupId>com.huohuzhihui</groupId>
+            <artifactId>huohuzhihui-system</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.huohuzhihui</groupId>
+            <artifactId>huohuzhihui-merchant</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.smartboot.license</groupId>
+            <artifactId>license-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.huohuzhihui</groupId>
+            <artifactId>huohuzhihui-common</artifactId>
+        </dependency>
+        <!--<dependency>
+            <groupId>com.huohuzhihui</groupId>
+            <artifactId>huohuzhihui-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.huohuzhihui</groupId>
+            <artifactId>huohuzhihui-verify</artifactId>
+        </dependency>-->
+        <!-- https://mvnrepository.com/artifact/com.gitee.huohuzhihui/huohuzhihui-verify -->
+        <dependency>
+            <groupId>com.gitee.huohuzhihui</groupId>
+            <artifactId>huohuzhihui-verify</artifactId>
+            <version>1.0.3.RELEASE</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.gitee.huohuzhihui/huohuzhihui-base -->
+        <dependency>
+            <groupId>com.gitee.huohuzhihui</groupId>
+            <artifactId>huohuzhihui-base</artifactId>
+            <version>1.0.3.RELEASE</version>
+            <type>pom</type>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.gitee.huohuzhihui/huohuzhihui-core -->
+        <dependency>
+            <groupId>com.gitee.huohuzhihui</groupId>
+            <artifactId>huohuzhihui-core</artifactId>
+            <version>1.0.3.RELEASE</version>
+        </dependency>
+    </dependencies>
+
+
+</project>

@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huohuzhihui.trade.mapper.TradeOrderMapper">
+    
+    <resultMap type="TradeOrder" id="TradeOrderResult">
+        <result property="id"    column="id"    />
+        <result property="type"    column="type"    />
+        <result property="accountId"    column="account_id"    />
+        <result property="amount"    column="amount"    />
+        <result property="status"    column="status"    />
+        <result property="source"    column="source"    />
+        <result property="deviceId"    column="device_id"    />
+        <result property="remarks"    column="remarks"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="userName"    column="user_name"    />
+    </resultMap>
+    <resultMap type="TradeOrderReport" id="TradeOrderReportResult">
+        <result property="tradeDate"    column="trade_date"    />
+        <result property="merchantName"    column="merchant_name"    />
+        <result property="sum"    column="sum"    />
+        <result property="count"    column="count"    />
+    </resultMap>
+    <sql id="selectTradeOrderVo">
+        select id, type, account_id, amount, status, source, device_id, remarks, create_by, create_time, update_by, update_time, del_flag from trade_order
+    </sql>
+    <select id="selectTradeOrderList" parameterType="TradeOrder" resultMap="TradeOrderResult">
+        select o.id, o.type, o.account_id, o.amount, o.status, o.source, o.device_id,
+        o.remarks, o.create_by, o.create_time, o.update_by, o.update_time, o.del_flag,u.user_name
+        from trade_order o
+        left join acc_user_account a on o.account_id = a.id
+        left join sys_user u on a.user_id = u.user_id
+        <where>  
+            <if test="type != null  and type != ''"> and o.type = #{type}</if>
+            <if test="accountId != null "> and o.account_id = #{accountId}</if>
+            <if test="amount != null "> and o.amount = #{amount}</if>
+            <if test="status != null "> and o.status = #{status}</if>
+            <if test="source != null "> and o.source = #{source}</if>
+            <if test="deviceId != null "> and o.device_id = #{deviceId}</if>
+            <if test="remarks != null  and remarks != ''"> and o.remarks = #{remarks}</if>
+            <if test="beginTime != null and beginTime != '' "> and o.create_time <![CDATA[>=]]> #{beginTime}</if>
+            <if test="endTime != null and endTime != '' "> and o.create_time <![CDATA[<=]]> #{endTime}</if>
+            <if test="userName != null and userName != ''"> and u.user_name=#{userName}</if>
+            <if test="mobile != null and mobile != ''"> and u.phonenumber=#{mobile}</if>
+        </where>
+        order by o.create_time desc
+    </select>
+    
+    <select id="selectTradeOrderById" parameterType="Long" resultMap="TradeOrderResult">
+        <include refid="selectTradeOrderVo"/>
+        where id = #{id}
+    </select>
+    <select id="getOrderStatistics" resultType="java.math.BigDecimal">
+        select sum(amount) from trade_order
+        <where>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="createTime != null "> and create_time > #{createTime}</if>
+            <if test="accountId != null  and accountId != ''"> and account_id = #{accountId}</if>
+            <if test="beginTime != null and beginTime != '' "> and o.update_time <![CDATA[>=]]> #{beginTime}</if>
+            <if test="endTime != null and endTime != '' "> and o.update_time <![CDATA[<=]]> #{endTime}</if>
+        </where>
+    </select>
+    <select id="getUserPayCount" resultType="java.lang.Long">
+        select count(*) from trade_order where create_time > #{createTime} and status = 1
+    </select>
+    <!--获取商户营收报表-->
+    <select id="getMerchantStatistics" resultMap="TradeOrderReportResult">
+        SELECT
+        m.`name` as merchant_name,
+        sum(amount) as sum,
+        count(*) as count
+        FROM trade_order o
+        LEFT JOIN mer_device d on o.device_id = d.id
+        left join mer_merchant m on d.merchant_id = m.id
+        <where>
+            o.device_id is not null
+            <if test="merchantId != null  and merchantId != ''"> and m.id = #{merchantId}</if>
+            <if test="beginTime != null and beginTime != ''"> and o.update_time <![CDATA[ >= ]]> #{beginTime} </if>
+            <if test="endTime != null and endTime != ''"> and o.update_time <![CDATA[ <= ]]>#{endTime} </if>
+        </where>
+        group by m.`name`
+        order by merchant_name asc
+    </select>
+    <select id="getCurrentMothOrder" resultType="com.huohuzhihui.trade.domain.TradeOrderChart">
+                SELECT
+                    YEAR (create_time) yearName,
+                    MONTH (create_time) monthName,
+                    DAY (create_time) dayName,
+                    sum(amount) amount
+                FROM
+                    trade_order
+                WHERE
+                    STATUS != 2
+                AND DATE_FORMAT(create_time, '%Y%m') = DATE_FORMAT(CURDATE(), '%Y%m')
+                AND type=#{type}
+                GROUP BY
+                    YEAR (create_time),
+                    MONTH (create_time),
+                    DAY (create_time)
+    </select>
+    <insert id="insertTradeOrder" parameterType="TradeOrder" useGeneratedKeys="true" keyProperty="id">
+        insert into trade_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="type != null and type != ''">type,</if>
+            <if test="accountId != null">account_id,</if>
+            <if test="amount != null">amount,</if>
+            <if test="status != null">status,</if>
+            <if test="source != null">source,</if>
+            <if test="deviceId != null">device_id,</if>
+            <if test="remarks != null">remarks,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="type != null and type != ''">#{type},</if>
+            <if test="accountId != null">#{accountId},</if>
+            <if test="amount != null">#{amount},</if>
+            <if test="status != null">#{status},</if>
+            <if test="source != null">#{source},</if>
+            <if test="deviceId != null">#{deviceId},</if>
+            <if test="remarks != null">#{remarks},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTradeOrder" parameterType="TradeOrder">
+        update trade_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="type != null and type != ''">type = #{type},</if>
+            <if test="accountId != null">account_id = #{accountId},</if>
+            <if test="amount != null">amount = #{amount},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="source != null">source = #{source},</if>
+            <if test="deviceId != null">device_id = #{deviceId},</if>
+            <if test="remarks != null">remarks = #{remarks},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTradeOrderById" parameterType="Long">
+        delete from trade_order where id = #{id}
+    </delete>
+
+    <delete id="deleteTradeOrderByIds" parameterType="String">
+        delete from trade_order where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

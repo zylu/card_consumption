@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huohuzhihui.trade.mapper.AccTradeRecordMapper">
+    
+    <resultMap type="AccTradeRecord" id="AccTradeRecordResult">
+        <result property="id"    column="id"    />
+        <result property="amount"    column="amount"    />
+        <result property="type"    column="type"    />
+        <result property="tradeNo"    column="trade_no"    />
+        <result property="channelCode"    column="channel_code"    />
+        <result property="channelName"    column="channel_name"    />
+        <result property="tradeOrderId"    column="trade_order_id"    />
+        <result property="status"    column="status"    />
+        <result property="accountName"    column="account_name"    />
+        <result property="cardNo"    column="card_no"    />
+        <result property="tradeTime"    column="trade_time"    />
+        <result property="accountId"    column="account_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectAccTradeRecordVo">
+        select id, amount, type, trade_no, channel_code, channel_name, trade_order_id, status, account_name, trade_time, account_id,card_no, create_time, create_by, update_by, update_time, remark, del_flag from acc_trade_record
+    </sql>
+
+    <select id="selectAccTradeRecordList" parameterType="AccTradeRecord" resultMap="AccTradeRecordResult">
+        <include refid="selectAccTradeRecordVo"/>
+        <where>  
+            <if test="amount != null "> and amount = #{amount}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="tradeNo != null  and tradeNo != ''"> and trade_no = #{tradeNo}</if>
+            <if test="channelCode != null  and channelCode != ''"> and channel_code = #{channelCode}</if>
+            <if test="channelName != null  and channelName != ''"> and channel_name like concat('%', #{channelName}, '%')</if>
+            <if test="tradeOrderId != null "> and trade_order_id = #{tradeOrderId}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="accountName != null  and accountName != ''"> and account_name like concat('%', #{accountName}, '%')</if>
+            <if test="tradeTime != null "> and trade_time = #{tradeTime}</if>
+            <if test="accountId != null "> and account_id = #{accountId}</if>
+            <if test="cardNo != null  and cardNo != ''"> and card_no = #{cardNo}</if>
+        </where>
+    </select>
+    
+    <select id="selectAccTradeRecordById" parameterType="Long" resultMap="AccTradeRecordResult">
+        <include refid="selectAccTradeRecordVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectAccTradeRecordByAccountRechargeOrderId" parameterType="Long" resultMap="AccTradeRecordResult">
+        <include refid="selectAccTradeRecordVo"/>
+        where trade_order_id = #{rechargeOrderid}
+    </select>
+    <select id="selectAccTradeRecordByTradeNo" parameterType="String" resultMap="AccTradeRecordResult">
+        <include refid="selectAccTradeRecordVo"/>
+        where trade_no = #{tradeNo}
+    </select>
+
+
+    <insert id="insertAccTradeRecord" parameterType="AccTradeRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into acc_trade_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="amount != null">amount,</if>
+            <if test="type != null">type,</if>
+            <if test="tradeNo != null and tradeNo != ''">trade_no,</if>
+            <if test="cardNo != null and cardNo != ''">card_no,</if>
+            <if test="channelCode != null and channelCode != ''">channel_code,</if>
+            <if test="channelName != null and channelName != ''">channel_name,</if>
+            <if test="tradeOrderId != null">trade_order_id,</if>
+            <if test="status != null">status,</if>
+            <if test="accountName != null and accountName != ''">account_name,</if>
+            <if test="tradeTime != null">trade_time,</if>
+            <if test="accountId != null">account_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="delFlag != null and delFlag != ''">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="amount != null">#{amount},</if>
+            <if test="type != null">#{type},</if>
+            <if test="tradeNo != null and tradeNo != ''">#{tradeNo},</if>
+            <if test="cardNo != null and cardNo != ''">#{cardNo},</if>
+            <if test="channelCode != null and channelCode != ''">#{channelCode},</if>
+            <if test="channelName != null and channelName != ''">#{channelName},</if>
+            <if test="tradeOrderId != null">#{tradeOrderId},</if>
+            <if test="status != null">#{status},</if>
+            <if test="accountName != null and accountName != ''">#{accountName},</if>
+            <if test="tradeTime != null">#{tradeTime},</if>
+            <if test="accountId != null">#{accountId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="delFlag != null and delFlag != ''">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAccTradeRecord" parameterType="AccTradeRecord">
+        update acc_trade_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="amount != null">amount = #{amount},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="tradeNo != null and tradeNo != ''">trade_no = #{tradeNo},</if>
+            <if test="cardNo != null and cardNo != ''">card_no = #{cardNo},</if>
+            <if test="channelCode != null and channelCode != ''">channel_code = #{channelCode},</if>
+            <if test="channelName != null and channelName != ''">channel_name = #{channelName},</if>
+            <if test="tradeOrderId != null">trade_order_id = #{tradeOrderId},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="accountName != null and accountName != ''">account_name = #{accountName},</if>
+            <if test="tradeTime != null">trade_time = #{tradeTime},</if>
+            <if test="accountId != null">account_id = #{accountId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="delFlag != null and delFlag != ''">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAccTradeRecordById" parameterType="Long">
+        delete from acc_trade_record where id = #{id}
+    </delete>
+
+    <delete id="deleteAccTradeRecordByIds" parameterType="String">
+        delete from acc_trade_record where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

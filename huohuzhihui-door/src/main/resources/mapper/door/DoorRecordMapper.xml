@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huohuzhihui.door.mapper.DoorRecordMapper">
+    
+    <resultMap type="DoorRecord" id="DoorRecordResult">
+        <result property="id"    column="id"    />
+        <result property="sn"    column="sn"    />
+        <result property="lockNo"    column="lock_no"    />
+        <result property="isIn"    column="is_in"    />
+        <result property="isValid"    column="is_valid"    />
+        <result property="cardNo"    column="card_no"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="description"    column="description"    />
+        <result property="type"    column="type"    />
+        <result property="openTime"    column="open_time"    />
+        <result property="stuCode"    column="stu_code"    />
+        <result property="accCname"    column="acc_cname"    />
+        <result property="depCname"    column="dep_cname"    />
+    </resultMap>
+
+    <sql id="selectDoorRecordVo">
+        select id, sn, lock_no, is_in, is_valid, card_no, create_time, description, type, open_time, stu_code, acc_cname, dep_cname from t_door_record
+    </sql>
+
+    <select id="selectDoorRecordList" parameterType="DoorRecord" resultMap="DoorRecordResult">
+        <include refid="selectDoorRecordVo"/>
+        <where>  
+            <if test="sn != null  and sn != ''"> and sn = #{sn}</if>
+            <if test="lockNo != null  and lockNo != ''"> and lock_no = #{lockNo}</if>
+            <if test="isIn != null "> and is_in = #{isIn}</if>
+            <if test="isValid != null "> and is_valid = #{isValid}</if>
+            <if test="cardNo != null  and cardNo != ''"> and card_no = #{cardNo}</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="openTime != null "> and open_time = #{openTime}</if>
+            <if test="stuCode != null  and stuCode != ''"> and stu_code = #{stuCode}</if>
+            <if test="accCname != null  and accCname != ''"> and acc_cname like concat('%', #{accCname}, '%')</if>
+            <if test="depCname != null  and depCname != ''"> and dep_cname like concat('%', #{depCname}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectDoorRecordById" parameterType="String" resultMap="DoorRecordResult">
+        <include refid="selectDoorRecordVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertDoorRecord" parameterType="DoorRecord">
+        insert into t_door_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="sn != null and sn != ''">sn,</if>
+            <if test="lockNo != null and lockNo != ''">lock_no,</if>
+            <if test="isIn != null">is_in,</if>
+            <if test="isValid != null">is_valid,</if>
+            <if test="cardNo != null">card_no,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="description != null">description,</if>
+            <if test="type != null">type,</if>
+            <if test="openTime != null">open_time,</if>
+            <if test="stuCode != null">stu_code,</if>
+            <if test="accCname != null">acc_cname,</if>
+            <if test="depCname != null">dep_cname,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="sn != null and sn != ''">#{sn},</if>
+            <if test="lockNo != null and lockNo != ''">#{lockNo},</if>
+            <if test="isIn != null">#{isIn},</if>
+            <if test="isValid != null">#{isValid},</if>
+            <if test="cardNo != null">#{cardNo},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="description != null">#{description},</if>
+            <if test="type != null">#{type},</if>
+            <if test="openTime != null">#{openTime},</if>
+            <if test="stuCode != null">#{stuCode},</if>
+            <if test="accCname != null">#{accCname},</if>
+            <if test="depCname != null">#{depCname},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDoorRecord" parameterType="DoorRecord">
+        update t_door_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="sn != null and sn != ''">sn = #{sn},</if>
+            <if test="lockNo != null and lockNo != ''">lock_no = #{lockNo},</if>
+            <if test="isIn != null">is_in = #{isIn},</if>
+            <if test="isValid != null">is_valid = #{isValid},</if>
+            <if test="cardNo != null">card_no = #{cardNo},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="openTime != null">open_time = #{openTime},</if>
+            <if test="stuCode != null">stu_code = #{stuCode},</if>
+            <if test="accCname != null">acc_cname = #{accCname},</if>
+            <if test="depCname != null">dep_cname = #{depCname},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDoorRecordById" parameterType="String">
+        delete from t_door_record where id = #{id}
+    </delete>
+
+    <delete id="deleteDoorRecordByIds" parameterType="String">
+        delete from t_door_record where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

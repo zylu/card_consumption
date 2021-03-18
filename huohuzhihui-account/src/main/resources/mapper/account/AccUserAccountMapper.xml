@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huohuzhihui.account.mapper.AccUserAccountMapper">
+    
+    <resultMap type="Account" id="AccUserAccountResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="phonenumber"    column="phonenumber"    />
+        <result property="balance"    column="balance"    />
+        <result property="deposit"    column="deposit"    />
+        <result property="addfare"    column="addfare"    />
+        <result property="avdate"    column="avdate"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remarks"    column="remarks"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="version"    column="version"    />
+    </resultMap>
+
+    <sql id="selectAccUserAccountVo">
+        select a.id, a.user_id, a.balance, a.deposit, a.addfare, a.avdate, a.status, a.create_by, a.create_time, a.update_by, a.update_time, a.remarks, a.del_flag, a.version,u.user_name
+        from acc_user_account a right join sys_user u on a.user_id = u.user_id
+    </sql>
+
+    <select id="selectAccUserAccountList" parameterType="Account" resultMap="AccUserAccountResult">
+        select a.id, a.user_id, a.balance, a.deposit, a.addfare, a.avdate, a.status, a.create_by, a.create_time, a.update_by, a.update_time, a.remarks, a.del_flag,a.version, u.user_name,u.phonenumber
+        from acc_user_account a
+        left join sys_user u on a.user_id = u.user_id
+        <where>
+            <if test="userName != null "> and u.user_name = #{userName}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="phonenumber != null and phonenumber != ''"> and u.phonenumber=#{phonenumber}</if>
+        </where>
+        order by a.update_time desc
+    </select>
+    
+    <select id="selectAccUserAccountById" parameterType="Long" resultMap="AccUserAccountResult">
+        select a.id, a.user_id, a.balance, a.deposit, a.addfare, a.avdate, a.status, a.create_by, a.create_time, a.update_by, a.update_time, a.remarks, a.del_flag,a.version, u.user_name,u.phonenumber
+        from acc_user_account a
+        left join sys_user u on a.user_id = u.user_id
+        where a.id = #{id}
+    </select>
+
+    <select id="selectAccUserAccountByUserId" parameterType="Long" resultMap="AccUserAccountResult">
+        <include refid="selectAccUserAccountVo"/>
+        where a.user_id = #{userId}
+    </select>
+    <select id="getUserAccountStatistics" resultType="java.lang.Long">
+        select count(*) from acc_user_account
+        <where>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="createTime != null "> and create_time > #{createTime}</if>
+            <if test="updateTime != null "> and update_time > #{updateTime}</if>
+        </where>
+    </select>
+    <select id="getTotalUserBalance" resultType="java.math.BigDecimal">
+        select sum(balance) from acc_user_account  where status = 0 or status = 1
+    </select>
+
+    <insert id="insertAccUserAccount" parameterType="Account" useGeneratedKeys="true" keyProperty="id">
+        insert into acc_user_account
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="balance != null">balance,</if>
+            <if test="deposit != null">deposit,</if>
+            <if test="addfare != null">addfare,</if>
+            <if test="avdate != null">avdate,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remarks != null">remarks,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="version != null">version,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="balance != null">#{balance},</if>
+            <if test="deposit != null">#{deposit},</if>
+            <if test="addfare != null">#{addfare},</if>
+            <if test="avdate != null">#{avdate},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remarks != null">#{remarks},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="version != null">#{version},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAccUserAccount" parameterType="Account">
+        update acc_user_account
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="balance != null">balance = #{balance},</if>
+            <if test="deposit != null">deposit = #{deposit},</if>
+            <if test="addfare != null">addfare = #{addfare},</if>
+            <if test="avdate != null">avdate = #{avdate},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remarks != null">remarks = #{remarks},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="version != null">version = #{version},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    <update id="updateAccUserAccountByUserId" parameterType="Account">
+        update acc_user_account
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="balance != null">balance = #{balance},</if>
+            <if test="deposit != null">deposit = #{deposit},</if>
+            <if test="addfare != null">addfare = #{addfare},</if>
+            <if test="avdate != null">avdate = #{avdate},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remarks != null">remarks = #{remarks},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="version != null">version = #{version},</if>
+        </trim>
+        where user_id = #{userId}
+    </update>
+    <update id="recharge" parameterType="Account">
+         update acc_user_account set balance = balance + #{balance} ,version = version+1,update_by=#{updateBy}  where id = #{id} and version = #{version}
+    </update>
+
+    <update id="updateStatusByIds" >
+        update acc_user_account set status = #{status},update_time=#{updateTime},update_by=#{updateBy}
+        where user_id in
+        <foreach item="id" collection="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+
+    <delete id="deleteAccUserAccountById" parameterType="Long">
+        delete from acc_user_account where id = #{id}
+    </delete>
+
+    <delete id="deleteAccUserAccountByIds" parameterType="String">
+        delete from acc_user_account where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

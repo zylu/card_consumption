@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huohuzhihui.merchant.mapper.MerDeviceOnlineMapper">
+    
+    <resultMap type="MerDeviceOnline" id="MerDeviceOnlineResult">
+        <result property="id"    column="id"    />
+        <result property="online"    column="online"    />
+        <result property="deviceId"    column="device_id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remarks"    column="remarks"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectMerDeviceOnlineVo">
+        select id, online, device_id, create_by, create_time, update_by, update_time, remarks, del_flag from mer_device_online
+    </sql>
+
+    <select id="selectMerDeviceOnlineList" parameterType="MerDeviceOnline" resultMap="MerDeviceOnlineResult">
+        <include refid="selectMerDeviceOnlineVo"/>
+        <where>  
+            <if test="online != null "> and online = #{online}</if>
+            <if test="deviceId != null  and deviceId != ''"> and device_id = #{deviceId}</if>
+        </where>
+    </select>
+    
+    <select id="selectMerDeviceOnlineById" parameterType="Long" resultMap="MerDeviceOnlineResult">
+        <include refid="selectMerDeviceOnlineVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertMerDeviceOnline" parameterType="MerDeviceOnline" useGeneratedKeys="true" keyProperty="id">
+        insert into mer_device_online
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="online != null">online,</if>
+            <if test="deviceId != null">device_id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remarks != null">remarks,</if>
+            <if test="delFlag != null and delFlag != ''">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="online != null">#{online},</if>
+            <if test="deviceId != null">#{deviceId},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remarks != null">#{remarks},</if>
+            <if test="delFlag != null and delFlag != ''">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMerDeviceOnline" parameterType="MerDeviceOnline">
+        update mer_device_online
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="online != null">online = #{online},</if>
+            <if test="deviceId != null">device_id = #{deviceId},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remarks != null">remarks = #{remarks},</if>
+            <if test="delFlag != null and delFlag != ''">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMerDeviceOnlineById" parameterType="Long">
+        delete from mer_device_online where id = #{id}
+    </delete>
+
+    <delete id="deleteMerDeviceOnlineByIds" parameterType="String">
+        delete from mer_device_online where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

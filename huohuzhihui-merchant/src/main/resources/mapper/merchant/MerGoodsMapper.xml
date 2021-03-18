@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huohuzhihui.merchant.mapper.MerGoodsMapper">
+    
+    <resultMap type="MerGoods" id="MerGoodsResult">
+        <result property="id"    column="id"    />
+        <result property="timeId"    column="time_id"    />
+        <result property="name"    column="name"    />
+        <result property="price"    column="price"    />
+        <result property="goodsNumber"    column="goods_number"    />
+        <result property="merchantId"    column="merchant_id"    />
+        <result property="remarks"    column="remarks"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectMerGoodsVo">
+        select id, time_id, name, price, goods_number, merchant_id, remarks, create_by, create_time, update_by, update_time, del_flag from mer_goods
+    </sql>
+
+    <select id="selectMerGoodsList" parameterType="MerGoods" resultMap="MerGoodsResult">
+        <include refid="selectMerGoodsVo"/>
+        <where>  
+            <if test="timeId != null  and timeId != ''"> and time_id = #{timeId}</if>
+            <if test="merchantId != null  and merchantId != ''"> and merchant_id = #{merchantId}</if>
+        </where>
+    </select>
+    
+    <select id="selectMerGoodsById" parameterType="Long" resultMap="MerGoodsResult">
+        <include refid="selectMerGoodsVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertMerGoods" parameterType="MerGoods" useGeneratedKeys="true" keyProperty="id">
+        insert into mer_goods
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="timeId != null">time_id,</if>
+            <if test="name != null">name,</if>
+            <if test="price != null">price,</if>
+            <if test="goodsNumber != null">goods_number,</if>
+            <if test="merchantId != null">merchant_id,</if>
+            <if test="remarks != null">remarks,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="timeId != null">#{timeId},</if>
+            <if test="name != null">#{name},</if>
+            <if test="price != null">#{price},</if>
+            <if test="goodsNumber != null">#{goodsNumber},</if>
+            <if test="merchantId != null">#{merchantId},</if>
+            <if test="remarks != null">#{remarks},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMerGoods" parameterType="MerGoods">
+        update mer_goods
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="timeId != null">time_id = #{timeId},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="goodsNumber != null">goods_number = #{goodsNumber},</if>
+            <if test="merchantId != null">merchant_id = #{merchantId},</if>
+            <if test="remarks != null">remarks = #{remarks},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMerGoodsById" parameterType="Long">
+        delete from mer_goods where id = #{id}
+    </delete>
+
+    <delete id="deleteMerGoodsByIds" parameterType="String">
+        delete from mer_goods where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

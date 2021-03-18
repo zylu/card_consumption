@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huohuzhihui.merchant.mapper.MerDeviceMapper">
+    
+    <resultMap type="MerDevice" id="MerDeviceResult">
+        <result property="id"    column="id"    />
+        <result property="no"    column="no"    />
+        <result property="sn"    column="sn"    />
+        <result property="ip"    column="ip"    />
+        <result property="port"    column="port"    />
+        <result property="deviceTypeId"    column="device_type_id"    />
+        <result property="merchantId"    column="merchant_id"    />
+        <result property="merchantName"    column="merchant_name"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remarks"    column="remarks"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectMerDeviceVo">
+        select id, no, sn, ip, port, device_type_id, create_by, create_time, update_by, update_time, remarks, del_flag,status from mer_device
+    </sql>
+
+    <select id="selectMerDeviceList" parameterType="MerDevice" resultMap="MerDeviceResult">
+        select d.id, d.no, d.sn, d.ip, d.port, d.device_type_id, d.create_by, d.create_time, d.update_by, d.update_time, d.remarks, d.del_flag,d.status,m.name as merchant_name
+        from mer_device d
+        left join mer_merchant m on d.merchant_id = m.id
+        <where>
+            <if test="no != null  and no != ''"> and d.no = #{no}</if>
+            <if test="sn != null  and sn != ''"> and d.sn = #{sn}</if>
+            <if test="ip != null  and ip != ''"> and d.ip = #{ip}</if>
+            <if test="deviceTypeId != null  and deviceTypeId != ''"> and d.device_type_id = #{deviceTypeId}</if>
+            <if test="merchantId != null  and merchantId != ''"> and d.merchant_id = #{merchantId}</if>
+        </where>
+    </select>
+    
+    <select id="selectMerDeviceById" parameterType="Long" resultMap="MerDeviceResult">
+        <include refid="selectMerDeviceVo"/>
+        where id = #{id}
+    </select>
+    <!--根据设备编号查询设备-->
+    <select id="selectMerDeviceByNo" parameterType="String" resultMap="MerDeviceResult">
+        <include refid="selectMerDeviceVo"/>
+        where no = #{no}
+    </select>
+
+
+
+    <!--查询指定设备的消费金额和消费笔数-->
+    <select id="getSumAndCountByNo" resultType="java.util.Map">
+        select count(*) as counts,sum(amount) as sums from trade_order o
+        where o.`status` = 1
+        and o.device_id = (select id from mer_device d where d.no = #{deviceNo})
+        <if test="createDate!=null and createDate != ''">
+            and date_format(o.create_time,'%Y-%m-%d')=#{createDate}
+        </if>
+    </select>
+
+    <insert id="insertMerDevice" parameterType="MerDevice" useGeneratedKeys="true" keyProperty="id">
+        insert into mer_device
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="no != null">no,</if>
+            <if test="sn != null and sn != ''">sn,</if>
+            <if test="ip != null">ip,</if>
+            <if test="port != null">port,</if>
+            <if test="deviceTypeId != null and deviceTypeId != ''">device_type_id,</if>
+            <if test="merchantId != null and merchantId != ''">merchant_id,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null and updateBy != ''">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remarks != null">remarks,</if>
+            <if test="delFlag != null and delFlag != ''">del_flag,</if>
+            <if test="status != null ">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="no != null">#{no},</if>
+            <if test="sn != null and sn != ''">#{sn},</if>
+            <if test="ip != null">#{ip},</if>
+            <if test="port != null">#{port},</if>
+            <if test="deviceTypeId != null and deviceTypeId != ''">#{deviceTypeId},</if>
+            <if test="merchantId != null and merchantId != ''">#{merchantId},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remarks != null">#{remarks},</if>
+            <if test="delFlag != null and delFlag != ''">#{delFlag},</if>
+            <if test="status != null ">#{status},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMerDevice" parameterType="MerDevice">
+        update mer_device
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="no != null">no = #{no},</if>
+            <if test="sn != null and sn != ''">sn = #{sn},</if>
+            <if test="ip != null">ip = #{ip},</if>
+            <if test="port != null">port = #{port},</if>
+            <if test="deviceTypeId != null and deviceTypeId != ''">device_type_id = #{deviceTypeId},</if>
+            <if test="merchantId != null and merchantId != ''">merchant_id=#{merchantId},</if>
+            <if test="createBy != null and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remarks != null">remarks = #{remarks},</if>
+            <if test="delFlag != null and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMerDeviceById" parameterType="Long">
+        delete from mer_device where id = #{id}
+    </delete>
+
+    <delete id="deleteMerDeviceByIds" parameterType="String">
+        delete from mer_device where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

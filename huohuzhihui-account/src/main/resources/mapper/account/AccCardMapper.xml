@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huohuzhihui.account.mapper.AccCardMapper">
+    
+    <resultMap type="Card" id="AccCardResult">
+        <result property="id"    column="id"    />
+        <result property="cardTypeId"    column="card_type_id"    />
+        <result property="cardNo"    column="card_no"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="status"    column="status"    />
+        <result property="operType"    column="oper_type"    />
+        <result property="remarks"    column="remarks"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="virtualcard"    column="virtualcard"    />
+    </resultMap>
+
+    <sql id="selectAccCardVo">
+        select id, card_type_id, card_no, user_id, status, remarks, create_by, create_time, update_by, update_time, del_flag,virtualcard from acc_card
+    </sql>
+    <select id="checkCardNoUnique" parameterType="String" resultType="int">
+        select count(1) from acc_card where card_no = #{cardNo} limit 1
+    </select>
+    <select id="selectAccCardList" parameterType="Card" resultMap="AccCardResult">
+        select c.id, c.card_type_id, c.card_no, c.user_id, c.status, c.remarks, c.create_by, c.create_time, c.update_by, c.update_time, c.del_flag,c.virtualcard,u.user_name
+        from acc_card c
+        left join acc_user_account a on c.user_id = a.id
+        left join sys_user u on a.user_id = u.user_id
+        <where>  
+            <if test="cardTypeId != null  and cardTypeId != ''"> and c.card_type_id = #{cardTypeId}</if>
+            <if test="cardNo != null  and cardNo != ''"> and c.card_no = #{cardNo}</if>
+            <if test="userId != null "> and c.user_id = #{userId}</if>
+            <if test="userName != null "> and u.user_name = #{userName}</if>
+            <if test="status != null "> and c.status = #{status}</if>
+            <if test="remarks != null  and remarks != ''"> and c.remarks = #{remarks}</if>
+            <if test="updateTime != null "> and c.update_time = #{updateTime}</if>
+            <if test="virtualcard != null "> and c.virtualcard = #{virtualcard}</if>
+        </where>
+    </select>
+    <select id="selectAccCardById" parameterType="Long" resultMap="AccCardResult">
+        <include refid="selectAccCardVo"/>
+        where id = #{id}
+    </select>
+    <select id="getCardtStatistics" resultType="java.lang.Long">
+        select count(*) from acc_card
+        <where>
+            <if test="operType != null "> and oper_type = #{operType}</if>
+            <if test="createTime != null "> and create_time > #{createTime}</if>
+        </where>
+    </select>
+    <select id="selectAccCardByCardNo" parameterType="String" resultMap="AccCardResult">
+        <include refid="selectAccCardVo"/>
+        where card_no = #{cardNo}
+    </select>
+    <insert id="insertAccCard" parameterType="Card" useGeneratedKeys="true" keyProperty="id">
+        insert into acc_card
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="cardTypeId != null and cardTypeId != ''">card_type_id,</if>
+            <if test="cardNo != null and cardNo != ''">card_no,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="status != null">status,</if>
+            <if test="operType != null">oper_type,</if>
+            <if test="remarks != null">remarks,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="virtualcard != null">virtualcard,</if>
+
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="cardTypeId != null and cardTypeId != ''">#{cardTypeId},</if>
+            <if test="cardNo != null and cardNo != ''">#{cardNo},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="status != null">#{status},</if>
+            <if test="operType != null">#{operType},</if>
+            <if test="remarks != null">#{remarks},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="virtualcard != null">#{virtualcard},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAccCard" parameterType="Card">
+        update acc_card
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="cardTypeId != null and cardTypeId != ''">card_type_id = #{cardTypeId},</if>
+            <if test="cardNo != null and cardNo != ''">card_no = #{cardNo},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="operType != null">oper_type=#{operType},</if>
+            <if test="remarks != null">remarks = #{remarks},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="virtualcard != null">virtualcard = #{virtualcard},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAccCardById" parameterType="Long">
+        delete from acc_card where id = #{id}
+    </delete>
+
+    <delete id="deleteAccCardByIds" parameterType="String">
+        delete from acc_card where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--批量修改卡状态-->
+    <update id="updateStatusByIds" >
+        update acc_card set status = #{status},update_time=#{updateTime},update_by=#{updateBy}
+        where user_id in
+        <foreach item="id" collection="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+    
+</mapper>

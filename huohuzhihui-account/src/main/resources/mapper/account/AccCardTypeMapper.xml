@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huohuzhihui.account.mapper.AccCardTypeMapper">
+    
+    <resultMap type="AccCardType" id="AccCardTypeResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="deposit"    column="deposit"    />
+        <result property="addfare"    column="addfare"    />
+        <result property="firstcost"    column="firstcost"    />
+        <result property="addcost"    column="addcost"    />
+        <result property="avdate"    column="avdate"    />
+        <result property="timelimit"    column="timelimit"    />
+        <result property="discount"    column="discount"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remarks"    column="remarks"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectAccCardTypeVo">
+        select id, name, deposit, addfare, firstcost, addcost, avdate, timelimit, discount, create_by, create_time, update_by, update_time, remarks, del_flag from acc_card_type
+    </sql>
+
+    <select id="selectAccCardTypeList" parameterType="AccCardType" resultMap="AccCardTypeResult">
+        <include refid="selectAccCardTypeVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectAccCardTypeById" parameterType="Long" resultMap="AccCardTypeResult">
+        <include refid="selectAccCardTypeVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertAccCardType" parameterType="AccCardType" useGeneratedKeys="true" keyProperty="id">
+        insert into acc_card_type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="deposit != null">deposit,</if>
+            <if test="addfare != null">addfare,</if>
+            <if test="firstcost != null">firstcost,</if>
+            <if test="addcost != null">addcost,</if>
+            <if test="avdate != null">avdate,</if>
+            <if test="timelimit != null">timelimit,</if>
+            <if test="discount != null">discount,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remarks != null">remarks,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="deposit != null">#{deposit},</if>
+            <if test="addfare != null">#{addfare},</if>
+            <if test="firstcost != null">#{firstcost},</if>
+            <if test="addcost != null">#{addcost},</if>
+            <if test="avdate != null">#{avdate},</if>
+            <if test="timelimit != null">#{timelimit},</if>
+            <if test="discount != null">#{discount},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remarks != null">#{remarks},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAccCardType" parameterType="AccCardType">
+        update acc_card_type
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="deposit != null">deposit = #{deposit},</if>
+            <if test="addfare != null">addfare = #{addfare},</if>
+            <if test="firstcost != null">firstcost = #{firstcost},</if>
+            <if test="addcost != null">addcost = #{addcost},</if>
+            <if test="avdate != null">avdate = #{avdate},</if>
+            <if test="timelimit != null">timelimit = #{timelimit},</if>
+            <if test="discount != null">discount = #{discount},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remarks != null">remarks = #{remarks},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAccCardTypeById" parameterType="Long">
+        delete from acc_card_type where id = #{id}
+    </delete>
+
+    <delete id="deleteAccCardTypeByIds" parameterType="String">
+        delete from acc_card_type where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

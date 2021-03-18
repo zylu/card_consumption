@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huohuzhihui.door.mapper.DoorGroupMapper">
+    
+    <resultMap type="DoorGroup" id="DoorGroupResult">
+        <result property="id"    column="ID"    />
+        <result property="name"    column="name"    />
+        <result property="remark"    column="remark"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectDoorGroupVo">
+        select ID, name, remark, update_time, create_time, del_flag from t_door_group
+    </sql>
+
+    <select id="selectDoorGroupList" parameterType="DoorGroup" resultMap="DoorGroupResult">
+        <include refid="selectDoorGroupVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectDoorGroupById" parameterType="String" resultMap="DoorGroupResult">
+        <include refid="selectDoorGroupVo"/>
+        where ID = #{id}
+    </select>
+        
+    <insert id="insertDoorGroup" parameterType="DoorGroup">
+        insert into t_door_group
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">ID,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="remark != null">remark,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDoorGroup" parameterType="DoorGroup">
+        update t_door_group
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+    <delete id="deleteDoorGroupById" parameterType="String">
+        delete from t_door_group where ID = #{id}
+    </delete>
+
+    <delete id="deleteDoorGroupByIds" parameterType="String">
+        delete from t_door_group where ID in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

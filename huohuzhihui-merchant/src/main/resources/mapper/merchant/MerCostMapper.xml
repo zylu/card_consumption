@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huohuzhihui.merchant.mapper.MerCostMapper">
+    
+    <resultMap type="MerCost" id="CostResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="amount"    column="amount"    />
+        <result property="posNo"    column="pos_no"    />
+        <result property="cardNo"    column="card_no"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="orderNo"    column="order_no"    />
+        <result property="userName"    column="user_name"    />
+        <result property="mobile"    column="phonenumber"    />
+        <result property="merchantId"    column="merchant_id"    />
+    </resultMap>
+    <resultMap type="MerCostReport" id="MerCostReportResult">
+        <result property="tradeDate"    column="trade_date"    />
+        <result property="merchantName"    column="merchant_name"    />
+        <result property="sum"    column="sum"    />
+        <result property="count"    column="count"    />
+    </resultMap>
+    <sql id="selectCost">
+        select id, user_id, amount, pos_no, card_no, create_time ,order_no,merchantId from mer_cost c
+    </sql>
+
+    <select id="selectMerCostList" parameterType="MerCost" resultMap="CostResult">
+        select c.id, c.user_id, c.amount, c.pos_no, c.card_no, c.create_time ,c.order_no,c.merchant_id,u.user_name,u.phonenumber from mer_cost c
+        left join sys_user u on u.user_id = c.user_id
+        <where>
+            <if test="posNo != null  and posNo != ''"> and c.pos_no = #{posNo} </if>
+            <if test="cardNo != null and cardNo != ''"> and c.card_no = #{cardNo} </if>
+            <if test="orderNo != null and orderNo != ''"> and c.order_no = #{orderNo} </if>
+            <if test="mobile != null and mobile != ''"> and u.phonenumber = #{mobile} </if>
+        </where>
+    </select>
+    <!--获取商户营收报表-->
+    <select id="getMerCostStatistics" resultMap="MerCostReportResult">
+        SELECT
+        m.`name` as merchant_name,
+        sum(amount) as sum,
+        count(*) as count
+        FROM mer_cost o
+        left join mer_merchant m on o.merchant_id = m.id
+        <where>
+            <if test="merchantId != null  and merchantId != ''"> and m.id = #{merchantId}</if>
+            <if test="beginTime != null and beginTime != ''"> and o.create_time <![CDATA[ >= ]]> #{beginTime} </if>
+            <if test="endTime != null and endTime != ''"> and o.create_time <![CDATA[ <= ]]>#{endTime} </if>
+        </where>
+        group by m.`name`
+        order by merchant_name asc
+    </select>
+
+    <insert id="insertMerCost" parameterType="MerCost" useGeneratedKeys="true" keyProperty="id">
+        insert into mer_cost
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null ">user_id,</if>
+            <if test="amount != null ">amount,</if>
+            <if test="posNo != null ">pos_no,</if>
+            <if test="cardNo != null ">card_no,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="orderNo != null ">order_no,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="amount != null">#{amount},</if>
+            <if test="posNo != null">#{posNo},</if>
+            <if test="cardNo != null">#{cardNo},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="orderNo != null ">#{orderNo},</if>
+         </trim>
+    </insert>
+</mapper>

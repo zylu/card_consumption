@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>huohuzhihui</artifactId>
+        <groupId>com.huohuzhihui</groupId>
+        <version>3.2.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>huohuzhihui-trade</artifactId>
+    <description>
+        交易模块
+    </description>
+    <properties>
+        <ijapy.version>2.7.1</ijapy.version>
+    </properties>
+    <dependencies>
+
+        <!-- 通用工具-->
+        <dependency>
+            <groupId>com.huohuzhihui</groupId>
+            <artifactId>huohuzhihui-common</artifactId>
+            <version>3.2.0</version>
+        </dependency>
+        <!--支付相关-->
+        <dependency>
+            <groupId>com.github.javen205</groupId>
+            <artifactId>IJPay-WxPay</artifactId>
+            <version>${ijapy.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.javen205</groupId>
+            <artifactId>IJPay-AliPay</artifactId>
+            <version>${ijapy.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.javen205</groupId>
+            <artifactId>IJPay-QQ</artifactId>
+            <version>${ijapy.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.javen205</groupId>
+            <artifactId>IJPay-UnionPay</artifactId>
+            <version>${ijapy.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.javen205</groupId>
+            <artifactId>IJPay-JDPay</artifactId>
+            <version>${ijapy.version}</version>
+        </dependency>
+    </dependencies>
+
+</project>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huohuzhihui.merchant.mapper.MerGoodsOrderMapper">
+    
+    <resultMap type="MerGoodsOrder" id="MerGoodsOrderResult">
+        <result property="id"    column="id"    />
+        <result property="price"    column="price"    />
+        <result property="useDate"    column="use_date"    />
+        <result property="status"    column="status"    />
+        <result property="timeId"    column="time_id"    />
+        <result property="remarks"    column="remarks"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectMerGoodsOrderVo">
+        select id, price, use_date, status, time_id, remarks, create_by, create_time, update_by, update_time, del_flag from mer_goods_order
+    </sql>
+
+    <select id="selectMerGoodsOrderList" parameterType="MerGoodsOrder" resultMap="MerGoodsOrderResult">
+        <include refid="selectMerGoodsOrderVo"/>
+        <where>  
+            <if test="useDate != null "> and use_date = #{useDate}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="timeId != null  and timeId != ''"> and time_id = #{timeId}</if>
+        </where>
+    </select>
+    
+    <select id="selectMerGoodsOrderById" parameterType="Long" resultMap="MerGoodsOrderResult">
+        <include refid="selectMerGoodsOrderVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertMerGoodsOrder" parameterType="MerGoodsOrder" useGeneratedKeys="true" keyProperty="id">
+        insert into mer_goods_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="price != null">price,</if>
+            <if test="useDate != null">use_date,</if>
+            <if test="status != null">status,</if>
+            <if test="timeId != null">time_id,</if>
+            <if test="remarks != null">remarks,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="price != null">#{price},</if>
+            <if test="useDate != null">#{useDate},</if>
+            <if test="status != null">#{status},</if>
+            <if test="timeId != null">#{timeId},</if>
+            <if test="remarks != null">#{remarks},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMerGoodsOrder" parameterType="MerGoodsOrder">
+        update mer_goods_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="price != null">price = #{price},</if>
+            <if test="useDate != null">use_date = #{useDate},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="timeId != null">time_id = #{timeId},</if>
+            <if test="remarks != null">remarks = #{remarks},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMerGoodsOrderById" parameterType="Long">
+        delete from mer_goods_order where id = #{id}
+    </delete>
+
+    <delete id="deleteMerGoodsOrderByIds" parameterType="String">
+        delete from mer_goods_order where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>
